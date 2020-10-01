@@ -12,6 +12,8 @@ import { useActions, useValues } from 'kea';
 import { i18n } from '@kbn/i18n';
 
 import { CredentialsLogic } from '../credentials_logic';
+import { Key } from './key';
+import { HiddenText } from '../../../../shared/hidden_text';
 import { IApiToken } from '../types';
 import { TOKEN_TYPE_DISPLAY_NAMES } from '../constants';
 import { apiTokenSort } from '../utils/api_token_sort';
@@ -48,19 +50,11 @@ export const CredentialsList: React.FC = () => {
             })}
           >
             {(copy) => (
-              <>
-                <EuiButtonIcon
-                  onClick={copy}
-                  iconType="copyClipboard"
-                  aria-label={i18n.translate(
-                    'xpack.enterpriseSearch.appSearch.credentials.copyApiKey',
-                    {
-                      defaultMessage: 'Copy API Key to clipboard',
-                    }
-                  )}
-                />
-                {token.key}
-              </>
+              <HiddenText text={token.key}>
+                {({ hiddenText, isHidden, toggle }) => (
+                  <Key copy={copy} toggleIsHidden={toggle} isHidden={isHidden} text={hiddenText} />
+                )}
+              </HiddenText>
             )}
           </EuiCopy>
         );
