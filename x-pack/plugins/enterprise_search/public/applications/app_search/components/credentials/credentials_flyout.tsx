@@ -17,6 +17,7 @@ import {
   EuiFlexItem,
   EuiButtonEmpty,
   EuiButton,
+  EuiPortal,
 } from '@elastic/eui';
 
 import {
@@ -51,44 +52,46 @@ const CredentialsFlyout: React.FC = () => {
   ) as ICredentialsLogicValues;
 
   return (
-    <EuiFlyout
-      onClose={hideCredentialsForm}
-      hideCloseButton={true}
-      ownFocus={true}
-      aria-labelledby="credentialsFlyoutTitle"
-      size="s"
-    >
-      <EuiFlyoutHeader hasBorder={true}>
-        <EuiTitle size="m">
-          <h2 id="credentialsFlyoutTitle">
-            {activeApiToken.id ? getUpdateTitle(activeApiToken.name) : getCreateTitle()}
-          </h2>
-        </EuiTitle>
-      </EuiFlyoutHeader>
-      <EuiFlyoutBody style={{ display: 'flex' }}>Details go here</EuiFlyoutBody>
-      <EuiFlyoutFooter>
-        <EuiFlexGroup justifyContent="spaceBetween">
-          <EuiFlexItem grow={false}>
-            <EuiButtonEmpty iconType="cross" onClick={hideCredentialsForm}>
-              {i18n.translate('xpack.enterpriseSearch.appSearch.credentials.flyout.closeText', {
-                defaultMessage: 'Close',
-              })}
-            </EuiButtonEmpty>
-          </EuiFlexItem>
-          <EuiFlexItem grow={false}>
-            <EuiButton
-              onClick={() => window.alert(`submit`)}
-              fill={true}
-              color="secondary"
-              iconType="check"
-              data-test-subj="APIKeyActionButton"
-            >
-              {activeApiTokenExists ? getUpdateText() : getSaveText()}
-            </EuiButton>
-          </EuiFlexItem>
-        </EuiFlexGroup>
-      </EuiFlyoutFooter>
-    </EuiFlyout>
+    <EuiPortal>
+      <EuiFlyout
+        onClose={hideCredentialsForm}
+        hideCloseButton={true}
+        ownFocus={true}
+        aria-labelledby="credentialsFlyoutTitle"
+        size="s"
+      >
+        <EuiFlyoutHeader hasBorder={true}>
+          <EuiTitle size="m">
+            <h2 id="credentialsFlyoutTitle">
+              {activeApiToken.id ? getUpdateTitle(activeApiToken.name) : getCreateTitle()}
+            </h2>
+          </EuiTitle>
+        </EuiFlyoutHeader>
+        <EuiFlyoutBody style={{ display: 'flex' }}>Details go here</EuiFlyoutBody>
+        <EuiFlyoutFooter>
+          <EuiFlexGroup justifyContent="spaceBetween">
+            <EuiFlexItem grow={false}>
+              <EuiButtonEmpty iconType="cross" onClick={hideCredentialsForm}>
+                {i18n.translate('xpack.enterpriseSearch.appSearch.credentials.flyout.closeText', {
+                  defaultMessage: 'Close',
+                })}
+              </EuiButtonEmpty>
+            </EuiFlexItem>
+            <EuiFlexItem grow={false}>
+              <EuiButton
+                onClick={() => window.alert(`submit`)}
+                fill={true}
+                color="secondary"
+                iconType="check"
+                data-test-subj="APIKeyActionButton"
+              >
+                {activeApiTokenExists ? getUpdateText() : getSaveText()}
+              </EuiButton>
+            </EuiFlexItem>
+          </EuiFlexGroup>
+        </EuiFlyoutFooter>
+      </EuiFlyout>
+    </EuiPortal>
   );
 };
 
