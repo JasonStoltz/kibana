@@ -20,4 +20,27 @@
   .documentsSearchExperience__pagingInfo {
     flex-grow: 0;
   }
+
+  .documentsSearchExperience__facet {
+    padding-left: 0;
+    padding-right: 0;
+
+    > * {
+      padding-left: 12px; // This rule, along with similar ones, is so that the left side of checkbox is not cut off by overflow-x hidden
+    }
+    .euiCheckbox {
+      // This is the overflow-x hidden rule that can cause the left side of the checkbox to be cut off
+      // We want the right side to be cut off and and the label to get ellipses but not to cut off the left
+      overflow-x: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .euiCheckbox__label {
+      white-space: nowrap;
+    }
+
+    .euiCheckbox__square {
+      left: 12px; // This rule, along with similar ones, is so that the left side of checkbox is not cut off by overflow-x hidden
+    }
+  }
 }
