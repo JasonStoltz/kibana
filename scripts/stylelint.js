@@ -16,27 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import type { PublicMethodsOf } from '@kbn/utility-types';
-import { ContextService, ContextSetup } from './context_service';
-import { contextMock } from '../../utils/context.mock';
 
-const createSetupContractMock = () => {
-  const setupContract: jest.Mocked<ContextSetup> = {
-    createContextContainer: jest.fn().mockImplementation(() => contextMock.create()),
-  };
-  return setupContract;
-};
-
-type ContextServiceContract = PublicMethodsOf<ContextService>;
-const createMock = () => {
-  const mocked: jest.Mocked<ContextServiceContract> = {
-    setup: jest.fn(),
-  };
-  mocked.setup.mockReturnValue(createSetupContractMock());
-  return mocked;
-};
-
-export const contextServiceMock = {
-  create: createMock,
-  createSetupContract: createSetupContractMock,
-};
+require('../src/setup_node_env');
+require('../src/dev/run_stylelint');

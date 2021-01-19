@@ -17,9 +17,20 @@
  * under the License.
  */
 
-import { contextMock } from '../../utils/context.mock';
+import { makeRe } from 'minimatch';
 
-export const MockContextConstructor = jest.fn(contextMock.create);
-jest.doMock('../../utils/context', () => ({
-  ContextContainer: MockContextConstructor,
-}));
+const includeGlobs = ['**/*.s+(a|c)ss'];
+const includeRegex = includeGlobs.map((glob) => makeRe(glob));
+
+function matchesInclude(file) {
+  for (let i = 0; i < includeRegex.length; i++) {
+    if (includeRegex[i].test(file.relativePath)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export function pickFilesToLint(log, files) {
+  return files.filter((file) => file.isSass()).filter(matchesInclude);
+}
