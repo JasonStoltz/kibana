@@ -55,11 +55,10 @@ export const SchemaLogic = kea<MakeLogicType<SchemaValues, SchemaActions>>({
   path: ['enterprise_search', 'app_search', 'schema_logic'],
   connect: {
     values: [SchemaBaseLogic, ['dataLoading', 'schema']],
-    actions: [SchemaBaseLogic, ['loadSchema', 'setSchema']],
+    actions: [SchemaBaseLogic, ['loadSchema', 'setSchema', 'onSchemaLoaded']],
   },
   actions: {
     loadIndexedEngineSchema: true,
-    onSchemaLoad: (response) => response,
     addSchemaField: (fieldName, fieldType) => ({ fieldName, fieldType }),
     updateSchemaFieldType: (fieldName, fieldType) => ({ fieldName, fieldType }),
     updateSchema: (successMessage) => successMessage,
@@ -72,32 +71,32 @@ export const SchemaLogic = kea<MakeLogicType<SchemaValues, SchemaActions>>({
       false,
       {
         updateSchema: () => true,
-        onSchemaLoad: () => false,
+        onSchemaLoaded: () => false,
         onSchemaUpdateError: () => false,
       },
     ],
     cachedSchema: [
       {},
       {
-        onSchemaLoad: (_, { schema }) => schema,
+        onSchemaLoaded: (_, { schema }) => schema,
       },
     ],
     mostRecentIndexJob: [
       {},
       {
-        onSchemaLoad: (_, { mostRecentIndexJob }) => mostRecentIndexJob,
+        onSchemaLoaded: (_, { mostRecentIndexJob }) => mostRecentIndexJob,
       },
     ],
     unconfirmedFields: [
       [],
       {
-        onSchemaLoad: (_, { unconfirmedFields }) => unconfirmedFields,
+        onSchemaLoaded: (_, { unconfirmedFields }) => unconfirmedFields,
       },
     ],
     hasNewUnsearchedFields: [
       false,
       {
-        onSchemaLoad: (_, { unsearchedUnconfirmedFields }) => unsearchedUnconfirmedFields,
+        onSchemaLoaded: (_, { unsearchedUnconfirmedFields }) => unsearchedUnconfirmedFields,
       },
     ],
     isModalOpen: [
@@ -105,7 +104,7 @@ export const SchemaLogic = kea<MakeLogicType<SchemaValues, SchemaActions>>({
       {
         openModal: () => true,
         closeModal: () => false,
-        onSchemaLoad: () => false,
+        onSchemaLoaded: () => false,
         onSchemaUpdateError: () => false,
       },
     ],
@@ -123,7 +122,7 @@ export const SchemaLogic = kea<MakeLogicType<SchemaValues, SchemaActions>>({
   },
   listeners: ({ actions, values }) => ({
     loadIndexedEngineSchema: async () => {
-      await actions.loadSchema(actions.onSchemaLoad);
+      await actions.loadSchema();
     },
     addSchemaField: ({ fieldName, fieldType }) => {
       if (values.schema.hasOwnProperty(fieldName)) {
@@ -152,7 +151,7 @@ export const SchemaLogic = kea<MakeLogicType<SchemaValues, SchemaActions>>({
         const response = await http.post(`/api/app_search/engines/${engineName}/schema`, {
           body: JSON.stringify(schema),
         });
-        actions.onSchemaLoad(response);
+        actions.onSchemaLoaded(response);
         flashSuccessToast(successMessage || UPDATE_SCHEMA_SUCCESS);
       } catch (e) {
         flashAPIErrors(e);

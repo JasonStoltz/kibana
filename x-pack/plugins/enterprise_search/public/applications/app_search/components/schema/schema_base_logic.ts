@@ -18,14 +18,17 @@ export interface SchemaBaseValues {
 }
 
 export interface SchemaBaseActions {
-  loadSchema(callback: Function): Function;
+  loadSchema(): void;
+  // TODO This would need to be typed generically or something...
+  onSchemaLoaded(response: object): { response: object };
   setSchema(schema: Schema): { schema: Schema };
 }
 
 export const SchemaBaseLogic = kea<MakeLogicType<SchemaBaseValues, SchemaBaseActions>>({
   path: ['enterprise_search', 'app_search', 'schema_base_logic'],
   actions: {
-    loadSchema: (callback) => callback,
+    loadSchema: () => true,
+    onSchemaLoaded: (response) => ({ response }),
     setSchema: (schema) => ({ schema }),
   },
   reducers: {
@@ -44,14 +47,14 @@ export const SchemaBaseLogic = kea<MakeLogicType<SchemaBaseValues, SchemaBaseAct
     ],
   },
   listeners: ({ actions }) => ({
-    loadSchema: async (callback) => {
+    loadSchema: async () => {
       const { http } = HttpLogic.values;
       const { engineName } = EngineLogic.values;
 
       try {
         const response = await http.get(`/api/app_search/engines/${engineName}/schema`);
         actions.setSchema(response.schema);
-        callback(response);
+        actions.onSchemaLoaded(response);
       } catch (e) {
         flashAPIErrors(e);
       }
