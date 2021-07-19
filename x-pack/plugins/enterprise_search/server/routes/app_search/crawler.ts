@@ -27,6 +27,24 @@ export function registerCrawlerRoutes({
     })
   );
 
+  router.post(
+    {
+      path: '/api/app_search/engines/{name}/crawler/domains',
+      validate: {
+        params: schema.object({
+          name: schema.string(),
+          entry_points: schema.arrayOf(schema.string()),
+        }),
+        query: schema.object({
+          respond_with: schema.maybe(schema.string()),
+        }),
+      },
+    },
+    enterpriseSearchRequestHandler.createRequest({
+      path: '/api/as/v0/engines/:name/crawler/domains',
+    })
+  );
+
   router.delete(
     {
       path: '/api/app_search/engines/{name}/crawler/domains/{id}',
