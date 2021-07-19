@@ -5,6 +5,8 @@
  * 2.0.
  */
 
+// WARNING: This file will overwrite the mock import present in ./shallow_useeffect.mock if imported after
+
 export const mockSetState = jest.fn();
 export const mockUseState = jest.fn((initState) => [initState, jest.fn()]);
 

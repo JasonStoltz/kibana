@@ -5,6 +5,8 @@
  * 2.0.
  */
 
+// WARNING: This file will overwrite the mock import present in ./usestate.mock if imported after
+
 // Helper for calling the returned useEffect unmount handler
 let mockUnmountHandler: () => void;
 export const unmountHandler = () => mockUnmountHandler();
