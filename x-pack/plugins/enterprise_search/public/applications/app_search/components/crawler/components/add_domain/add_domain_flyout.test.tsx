@@ -5,13 +5,9 @@
  * 2.0.
  */
 
-jest.mock('react', () => ({
-  ...(jest.requireActual('react') as object),
-  useState: jest.fn(),
-}));
+import { mockSetState, mockUseState } from '../../../../../__mocks__/shallow_usestate.mock';
 
-// This import uses * in order to spy on React.useState
-import * as React from 'react';
+import React from 'react';
 
 import { shallow, ShallowWrapper } from 'enzyme';
 
@@ -25,12 +21,8 @@ import { AddDomainFormErrors } from './add_domain_form_errors';
 import { AddDomainFormSubmitButton } from './add_domain_form_submit_button';
 
 describe('AddDomainFlyout', () => {
-  const mockSetState = jest.fn();
-  const mockUseState = jest.fn((initState) => [initState, mockSetState]);
-
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(React, 'useState').mockImplementation(mockUseState as any);
   });
 
   it('is hidden by default', () => {
@@ -41,6 +33,7 @@ describe('AddDomainFlyout', () => {
   });
 
   it('displays the flyout when the button is pressed', () => {
+    mockUseState.mockReturnValueOnce([false, mockSetState]);
     const wrapper = shallow(<AddDomainFlyout />);
 
     wrapper.find(EuiButton).simulate('click');
