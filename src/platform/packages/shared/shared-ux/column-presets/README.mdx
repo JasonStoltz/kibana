@@ -2,15 +2,61 @@
 id: sharedUX/Components/Column presets
 slug: /shared-ux/components/column-presets
 title: Column presets
-description: Shared column configuration presets for EuiBasicTable and EuiInMemoryTable components
+description: Shared column configuration presets and cell renderers for EuiBasicTable and EuiInMemoryTable
 tags: ['shared-ux', 'component']
 date: 2026-03-12
 ---
 
+## Description
+
+Shared presets and cell renderers for `EuiBasicTable` and `EuiInMemoryTable`, used to keep
+tabular data rendering consistent across Kibana.
+
 ## Column presets
 
-This package contains a set of common column presets and utilities for `EuiBasicTable` and `EuiInMemoryTable`
-components. Presets are partial configuration objects you pass to the `columns` objects, which automatically
-configure properties like `width` and the cell `render()` function with reasonable defaults.
+Functions that return a partial column configuration. Spread the result into your column
+definition.
 
-The goal of this package is to unify tabular data rendering across Kibana.
+| Export                | When to use                                                                                     |
+| --------------------- | ----------------------------------------------------------------------------------------------- |
+| `columnPresetActions` | Use this for Action columns in tables. It applies the standard fixed width and right alignment. |
+
+```tsx
+import { columnPresetActions } from '@kbn/shared-ux-column-presets';
+
+const columns = [
+  {
+    ...columnPresetActions({}),
+    name: 'Actions',
+    actions: [
+      /* ... */
+    ],
+  },
+];
+```
+
+## Cell renderers
+
+React components to return from a column's `render` function for consistent placeholder
+content.
+
+| Export            | When to use                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| `EmptyCellValue`  | Use this for `null` or `undefined` values. Shows a `—` placeholder.                  |
+| `EmptyCellString` | Use this for empty strings. Shows a localized `(Empty String)` placeholder. |
+
+```tsx
+import { EmptyCellValue, EmptyCellString } from '@kbn/shared-ux-column-presets';
+
+const columns = [
+  {
+    field: 'description',
+    name: 'Description',
+    render: (value: string | null | undefined) => {
+      if (value == null) return <EmptyCellValue />;
+      if (value === '') return <EmptyCellString />;
+      return value;
+    },
+  },
+];
+```
